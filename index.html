@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply Times New Roman globally */
+        body,
+        input,
+        button,
+        select,
+        textarea {
+            font-family: 'Times New Roman', Times, serif !important;
+        }
+
+        /* Custom Palette Colors */
+        .bg-dark-green {
+            background-color: #0A3323;
+        }
+
+        .text-dark-green {
+            color: #0A3323;
+        }
+
+        .bg-moss-green {
+            background-color: #839958;
+        }
+
+        .text-moss-green {
+            color: #839958;
+        }
+
+        .border-moss-green {
+            border-color: #839958;
+        }
+
+        .bg-beige {
+            background-color: #F7F4D5;
+        }
+
+        .text-beige {
+            color: #F7F4D5;
+        }
+
+        .bg-rosy-pink {
+            background-color: #D3968C;
+        }
+
+        .text-rosy-pink {
+            color: #D3968C;
+        }
+
+        .border-rosy-pink {
+            border-color: #D3968C;
+        }
+
+        .bg-midnight-green {
+            background-color: #105666;
+        }
+
+        .text-midnight-green {
+            color: #105666;
+        }
+
+        .border-midnight-green {
+            border-color: #105666;
+        }
+
+        /* Tab Active Styling */
+        .tab-btn {
+            background-color: transparent;
+            color: #F7F4D5;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(211, 150, 140, 0.3);
+        }
+
+        .tab-active {
+            background-color: #D3968C !important;
+            color: #0A3323 !important;
+            font-weight: bold !important;
+            border-bottom: 4px solid #0A3323 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-beige min-h-screen text-gray-900 flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-dark-green text-beige shadow-lg border-b-4 border-rosy-pink">
+        <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold tracking-wide">Hospital Management System</h1>
+                <p class="text-xs text-rosy-pink mt-1 italic font-semibold">OOP Java & Web Interactive Dashboard</p>
+            </div>
+            <span
+                class="text-sm bg-midnight-green text-beige px-4 py-1.5 rounded-full border border-rosy-pink shadow-inner">
+                System Active
+            </span>
+        </div>
+    </header>
+
+    <!-- Navigation Bar / Tabs -->
+    <nav class="bg-midnight-green border-b-2 border-dark-green shadow-sm">
+        <div class="container mx-auto px-6 flex flex-wrap gap-2 pt-2">
+            <button onclick="switchTab('doctors')" id="tab-doctors"
+                class="tab-btn tab-active px-5 py-2.5 rounded-t-lg text-sm font-semibold">
+                View Doctors & Availability
+            </button>
+            <button onclick="switchTab('add-patient')" id="tab-add-patient"
+                class="tab-btn px-5 py-2.5 rounded-t-lg text-sm font-semibold">
+                Register Patient
+            </button>
+            <button onclick="switchTab('view-patients')" id="tab-view-patients"
+                class="tab-btn px-5 py-2.5 rounded-t-lg text-sm font-semibold">
+                Registered Patient Directory
+            </button>
+            <button onclick="switchTab('coverage')" id="tab-coverage"
+                class="tab-btn px-5 py-2.5 rounded-t-lg text-sm font-semibold">
+                Check Insurance Coverage
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-6 py-8 flex-grow">
+
+        <!-- TAB 1: Doctors Directory & Availability -->
+        <section id="sec-doctors" class="space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-midnight-green">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-rosy-pink/40">
+                    <div>
+                        <h2 class="text-2xl font-bold text-dark-green">Registered Doctors (7 Available)</h2>
+                        <p class="text-xs text-midnight-green italic">View active medical staff, specializations, and
+                            schedule availability</p>
+                    </div>
+                    <span class="text-xs bg-rosy-pink text-dark-green px-3 py-1 rounded-full font-bold">Medical
+                        Staff</span>
+                </div>
+                <div id="doctorsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic doctor cards populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Register Patient Form -->
+        <section id="sec-add-patient" class="hidden max-w-2xl mx-auto">
+            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-rosy-pink">
+                <h2 class="text-2xl font-bold text-dark-green mb-1 flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rosy-pink inline-block"></span>
+                    Register New Patient
+                </h2>
+                <p class="text-xs text-midnight-green mb-6 italic">Enter patient demographics, medical ailment, and
+                    optional insurance details</p>
+
+                <form id="patientForm" class="space-y-4">
+                    <div>
+                        <label class="text-sm font-bold text-midnight-green block mb-1">Full Name</label>
+                        <input type="text" id="pName" placeholder="e.g. Ananya Sharma" required
+                            class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-bold text-midnight-green block mb-1">Age</label>
+                            <input type="number" id="pAge" placeholder="21" required
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                        </div>
+                        <div>
+                            <label class="text-sm font-bold text-midnight-green block mb-1">Gender</label>
+                            <input type="text" id="pGender" placeholder="Female / Male" required
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-bold text-midnight-green block mb-1">Patient ID</label>
+                            <input type="number" id="pId" placeholder="e.g. 201" required
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                        </div>
+                        <div>
+                            <label class="text-sm font-bold text-midnight-green block mb-1">Ailment / Diagnosis</label>
+                            <input type="text" id="pAilment" placeholder="e.g. Arrhythmia" required
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                        </div>
+                    </div>
+
+                    <!-- Insurance Section -->
+                    <div class="pt-4 mt-2 border-t-2 border-dashed border-rosy-pink/50">
+                        <label class="block text-sm font-bold text-rosy-pink mb-2 uppercase tracking-wide">
+                            Insurance Policy Details (Optional)
+                        </label>
+                        <div class="space-y-3">
+                            <input type="text" id="insProvider" placeholder="Provider Name (e.g., BlueCross)"
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                            <input type="text" id="insPolicy" placeholder="Policy Number (e.g., POL-9942)"
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                            <input type="text" id="insSpec"
+                                placeholder="Covered Specialization (Cardiology / Pediatrics / All)"
+                                class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-dark-green text-beige py-3 rounded-lg text-base font-bold hover:bg-rosy-pink hover:text-dark-green transition-all border border-dark-green shadow mt-4">
+                        Save Patient Record
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: Registered Patient Directory -->
+        <section id="sec-view-patients" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-rosy-pink">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-rosy-pink/40">
+                    <div>
+                        <h2 class="text-2xl font-bold text-dark-green">Registered Patient Directory</h2>
+                        <p class="text-xs text-midnight-green italic">Full records including insurance status</p>
+                    </div>
+                    <span class="text-xs bg-moss-green text-dark-green px-3 py-1 rounded-full font-bold">Patient
+                        Records</span>
+                </div>
+                <div id="patientsList" class="space-y-4">
+                    <p class="text-rosy-pink text-sm italic font-semibold">No patients registered in the system yet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: Check Insurance Coverage -->
+        <section id="sec-coverage" class="hidden max-w-2xl mx-auto">
+            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-midnight-green">
+                <h2 class="text-2xl font-bold text-midnight-green mb-1 flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-moss-green inline-block"></span>
+                    Coverage & Appointment Verification
+                </h2>
+                <p class="text-xs text-rosy-pink mb-6 font-semibold italic">Verifies patient policy eligibility against
+                    doctor specializations</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-bold text-midnight-green block mb-1">Select Patient ID</label>
+                        <input type="number" id="checkPatId" placeholder="Enter Patient ID (e.g. 201)"
+                            class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                    </div>
+                    <div>
+                        <label class="text-sm font-bold text-midnight-green block mb-1">Select Doctor ID (101 -
+                            107)</label>
+                        <input type="number" id="checkDocId" placeholder="Enter Doctor ID (101 to 107)"
+                            class="w-full px-3 py-2 border border-midnight-green rounded-lg text-sm bg-beige/30 focus:outline-none focus:border-rosy-pink">
+                    </div>
+
+                    <button onclick="checkEligibility()"
+                        class="w-full bg-midnight-green text-beige py-3 rounded-lg text-base font-bold hover:bg-moss-green transition-all shadow">
+                        Check Coverage & Appointment Status
+                    </button>
+
+                    <div id="eligibilityResult" class="mt-4 p-4 text-sm rounded-lg border-2 hidden font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-green text-beige text-center py-4 border-t-2 border-rosy-pink text-xs mt-auto">
+        <p>Hospital Management System Dashboard &copy; 2026</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Array of 7 Doctors matching Java backend
+        let doctors = [
+            { id: 101, name: "Dr. Smith", age: 45, gender: "Male", specialization: "Cardiology", availability: "Mon - Fri (9 AM - 2 PM)" },
+            { id: 102, name: "Dr. Adams", age: 38, gender: "Female", specialization: "Pediatrics", availability: "Tue - Sat (11 AM - 5 PM)" },
+            { id: 103, name: "Dr. Mehta", age: 50, gender: "Male", specialization: "Neurology", availability: "Mon - Thu (10 AM - 4 PM)" },
+            { id: 104, name: "Dr. Kapoor", age: 42, gender: "Female", specialization: "Dermatology", availability: "Wed - Sun (12 PM - 6 PM)" },
+            { id: 105, name: "Dr. Verma", age: 36, gender: "Male", specialization: "Orthopedics", availability: "Mon - Fri (8 AM - 1 PM)" },
+            { id: 106, name: "Dr. Sharma", age: 48, gender: "Female", specialization: "Oncology", availability: "Mon - Wed (9 AM - 3 PM)" },
+            { id: 107, name: "Dr. Patel", age: 41, gender: "Male", specialization: "General Medicine", availability: "Daily (10 AM - 6 PM)" }
+        ];
+
+        let patients = [];
+
+        // Tab Switcher Function
+        function switchTab(tabId) {
+            const tabs = ['doctors', 'add-patient', 'view-patients', 'coverage'];
+
+            tabs.forEach(t => {
+                const sec = document.getElementById('sec-' + t);
+                const btn = document.getElementById('tab-' + t);
+
+                if (t === tabId) {
+                    sec.classList.remove('hidden');
+                    btn.classList.add('tab-active');
+                } else {
+                    sec.classList.add('hidden');
+                    btn.classList.remove('tab-active');
+                }
+            });
+        }
+
+        // Render Doctors Cards
+        function renderDoctors() {
+            const container = document.getElementById('doctorsList');
+            container.innerHTML = '';
+            doctors.forEach(doc => {
+                container.innerHTML += `
+                    <div class="p-4 border-2 border-midnight-green rounded-lg bg-beige/40 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-dark-green">${doc.name}</h3>
+                                <span class="text-xs font-bold bg-rosy-pink text-dark-green px-2 py-0.5 rounded border border-dark-green">ID: ${doc.id}</span>
+                            </div>
+                            <p class="text-xs text-midnight-green mt-1">Age: ${doc.age} | Gender: ${doc.gender}</p>
+                            <p class="text-sm font-bold text-midnight-green mt-2 pt-1 border-t border-rosy-pink/40">
+                                Specialization: <span class="text-dark-green">${doc.specialization}</span>
+                            </p>
+                        </div>
+                        <div class="mt-3 text-xs bg-midnight-green text-beige px-2.5 py-1 rounded">
+                            Hours: ${doc.availability}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render Patients Directory
+        function renderPatients() {
+            const container = document.getElementById('patientsList');
+            if (patients.length === 0) {
+                container.innerHTML = '<p class="text-rosy-pink text-sm italic font-semibold">No patients registered in the system yet.</p>';
+                return;
+            }
+            container.innerHTML = '';
+            patients.forEach(pat => {
+                let insBadge = pat.insurance ?
+                    `<div class="mt-2 text-xs bg-moss-green text-dark-green px-3 py-1 rounded-md font-bold inline-block border border-dark-green">
+                        Insured by ${pat.insurance.provider} (Policy: ${pat.insurance.policy}) — Covers: ${pat.insurance.spec}
+                     </div>` :
+                    `<div class="mt-2 text-xs bg-rosy-pink text-dark-green px-3 py-1 rounded-md font-bold inline-block border border-dark-green">
+                        Self-Pay (No Insurance Policy)
+                     </div>`;
+
+                container.innerHTML += `
+                    <div class="p-4 border-2 border-rosy-pink rounded-lg bg-white shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-lg text-dark-green">${pat.name}</h3>
+                                <span class="text-xs font-bold bg-midnight-green text-beige px-2 py-0.5 rounded">Patient ID: ${pat.id}</span>
+                            </div>
+                            <p class="text-xs text-midnight-green mt-1">
+                                Age: ${pat.age} | Gender: ${pat.gender} | Ailment: <span class="font-bold text-rosy-pink">${pat.ailment}</span>
+                            </p>
+                            ${insBadge}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Handle Form Submission
+        document.getElementById('patientForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('pName').value.trim();
+            const age = parseInt(document.getElementById('pAge').value);
+            const gender = document.getElementById('pGender').value.trim();
+            const id = parseInt(document.getElementById('pId').value);
+            const ailment = document.getElementById('pAilment').value.trim();
+
+            const prov = document.getElementById('insProvider').value.trim();
+            const policy = document.getElementById('insPolicy').value.trim();
+            const spec = document.getElementById('insSpec').value.trim();
+
+            let insurance = null;
+            if (prov !== '') {
+                insurance = { provider: prov, policy: policy, spec: spec };
+            }
+
+            patients.push({ id, name, age, gender, ailment, insurance });
+            renderPatients();
+            this.reset();
+
+            alert('Patient record registered successfully!');
+            switchTab('view-patients');
+        });
+
+        // Insurance Eligibility Check
+        function checkEligibility() {
+            const patId = parseInt(document.getElementById('checkPatId').value);
+            const docId = parseInt(document.getElementById('checkDocId').value);
+            const resultBox = document.getElementById('eligibilityResult');
+
+            const pat = patients.find(p => p.id === patId);
+            const doc = doctors.find(d => d.id === docId);
+
+            resultBox.classList.remove('hidden', 'bg-moss-green', 'bg-rosy-pink', 'text-dark-green', 'border-dark-green');
+
+            if (!pat || !doc) {
+                resultBox.classList.add('bg-rosy-pink', 'text-dark-green', 'border-dark-green');
+                resultBox.innerHTML = '<strong>Error:</strong> Patient ID or Doctor ID not found in system. (Valid Doctor IDs: 101 to 107)';
+                return;
+            }
+
+            if (!pat.insurance) {
+                resultBox.classList.add('bg-rosy-pink', 'text-dark-green', 'border-dark-green');
+                resultBox.innerHTML = `<strong>Status: NOT COVERED</strong><br>Reason: ${pat.name} is registered as Self-Pay (No Insurance Policy).<br><em>Doctor Availability: ${doc.name} (${doc.specialization}) is available ${doc.availability}.</em>`;
+            } else if (pat.insurance.spec.toLowerCase() === doc.specialization.toLowerCase() || pat.insurance.spec.toLowerCase() === 'all') {
+                resultBox.classList.add('bg-moss-green', 'text-dark-green', 'border-dark-green');
+                resultBox.innerHTML = `<strong>Status: ELIGIBLE / COVERED!</strong><br>Details: ${pat.insurance.provider} covers ${doc.specialization} for ${doc.name}.<br><em>Doctor Availability: ${doc.name} is available ${doc.availability}.</em>`;
+            } else {
+                resultBox.classList.add('bg-rosy-pink', 'text-dark-green', 'border-dark-green');
+                resultBox.innerHTML = `<strong>Status: OUT-OF-NETWORK / NOT COVERED</strong><br>Reason: ${pat.insurance.provider} covers "${pat.insurance.spec}", but ${doc.name} specializes in "${doc.specialization}".<br><em>Doctor Availability: ${doc.name} is available ${doc.availability}.</em>`;
+            }
+        }
+
+        // Initialize doctors on page load
+        renderDoctors();
+    </script>
+</body>
+
+</html>
